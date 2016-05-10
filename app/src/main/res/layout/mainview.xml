@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:weightSum="1">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_weight="3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/grapes"
+            android:contentDescription="@string/grapesDescription"
+            android:id="@+id/grapes" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="@string/title"
+            android:textSize="50sp"
+            android:id="@+id/title"
+            android:layout_weight="4" />
+
+        <ImageView
+            android:layout_weight="3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/banana"
+            android:contentDescription="@string/bananaDescription"
+            android:id="@+id/banana"/>
+    </LinearLayout>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/logButton"
+        android:id="@+id/logButton"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/historyButton"
+        android:id="@+id/historyButton"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/feedbackButton"
+        android:id="@+id/feedbackButton"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="PROGRESS HERE"
+        android:gravity="center"
+        android:layout_gravity="center_horizontal"
+        android:textSize="40sp" />
+
+
+</LinearLayout>

@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">KIT305_Assignment2</string>
+    <string name="title">Nutrition Recorder</string>
+    <string name="logButton">Log Food</string>
+    <string name="historyButton">Food History</string>
+    <string name="feedbackButton">Feedback</string>
+    <string name="grapesDescription">Bunch of grapes</string>
+    <string name="bananaDescription">A banana</string>
 </resources>
