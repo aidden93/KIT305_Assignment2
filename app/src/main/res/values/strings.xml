@@ -1,9 +1,15 @@
 <resources>
-    <string name="app_name">KIT305_Assignment2</string>
-    <string name="title">Nutrition Recorder</string>
+    <string name="app_name">Nutrition Recorder</string>
     <string name="logButton">Log Food</string>
     <string name="historyButton">Food History</string>
     <string name="feedbackButton">Feedback</string>
     <string name="grapesDescription">Bunch of grapes</string>
     <string name="bananaDescription">A banana</string>
+    <string name="title_activity_log_food">LogFoodActivity</string>
+    <string name="foodGroup">Food Group:</string>
+    <string name="foodType">Food Type:</string>
+    <string name="quantity">Quantity:</string>
+    <string name="meal_time">Meal Time:</string>
+    <string name="amount">Enter an amount</string>
+    <string name="today">Today</string>
 </resources>
