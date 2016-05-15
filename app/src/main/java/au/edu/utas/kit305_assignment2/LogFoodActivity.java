@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Spinner;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -29,6 +30,12 @@ public class LogFoodActivity extends AppCompatActivity {
     private void init() {
         final Calendar calendar = Calendar.getInstance();
         final Button log = (Button) findViewById(R.id.logEntryButton);
+        final Spinner foodGroup = (Spinner) findViewById(R.id.foodGroup);
+        final Spinner foodType = (Spinner) findViewById(R.id.foodType);
+        final EditText amount = (EditText) findViewById(R.id.amount);
+        final Spinner servingType = (Spinner) findViewById(R.id.servingsType);
+        final Spinner time = (Spinner) findViewById(R.id.timePeriod);
+
         date = (EditText) findViewById(R.id.date);
         date.setText(dateFormatter.format(calendar.getTime()));
         date.setInputType(InputType.TYPE_NULL);
