@@ -53,6 +53,12 @@ public class FoodHistoryRecyclerAdapter  extends RecyclerView.Adapter<FoodHistor
         notifyDataSetChanged();
     }
 
+    public List<PastData> getListItems() { return list; }
+
+    public PastData getItem(int index) {
+        return list.get(index);
+    }
+
     @Override
     public int getItemCount()
     {

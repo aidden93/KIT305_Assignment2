@@ -49,7 +49,7 @@ public class LogFoodActivity extends AppCompatActivity {
         if (getIntent().getExtras() != null) {
             int row = getIntent().getExtras().getInt("row");
             DatabaseHelper db = new DatabaseHelper(this);
-            PastData entry = db.getEntry(row+1);
+            PastData entry = db.getEntry(row);
             if (entry != null) {
                 for (int i = 0; i < foodGroup.getCount(); i++) {
                     if (foodGroup.getAdapter().getItem(i).toString().equals(entry.getFoodGroup())) {
@@ -183,7 +183,7 @@ public class LogFoodActivity extends AppCompatActivity {
                         food.setServing(quantity.getText().toString()+" "+servingsType.getSelectedItem().toString());
                         food.setDate(date.getText().toString());
                         food.setMealTime(mealTime.getSelectedItem().toString());
-                        food.setId((getIntent().getExtras().getInt("row")+1));
+                        food.setId((getIntent().getExtras().getInt("row")));
                        if (databaseHelper.updateEntry(food.getId(), food))
                            Toast.makeText(getApplicationContext(), "Update successful", Toast.LENGTH_SHORT).show();
                         else

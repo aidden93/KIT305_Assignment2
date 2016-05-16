@@ -80,7 +80,7 @@ public class FoodHistroyFragment extends Fragment
                 new RecyclerItemClickListener(view.getContext(), new RecyclerItemClickListener.OnItemClickListener() {
                     @Override public void onItemClick(View view, int position) {
                         Intent intent = new Intent(view.getContext(), LogFoodActivity.class);
-                        intent.putExtra("row", position);
+                        intent.putExtra("row", ((FoodHistoryRecyclerAdapter)recyclerView.getAdapter()).getItem(position).getId());
                         startActivity(intent);
                     }
                 })
