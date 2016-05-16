@@ -19,6 +19,7 @@
             android:id="@+id/foodGroup"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_marginRight="75sp"
             app:layout_row="0"
             app:layout_column="1"
             app:layout_columnSpan="1" />
@@ -35,6 +36,7 @@
             android:id="@+id/foodType"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_marginRight="75sp"
             app:layout_row="1"
             app:layout_column="1"
             app:layout_columnSpan="1" />
@@ -55,7 +57,8 @@
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/amount"
+            android:id="@+id/quantity"
+            android:inputType="numberDecimal"
             android:hint="@string/amount"/>
 
         <Spinner

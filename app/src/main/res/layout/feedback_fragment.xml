@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Tips For Improving Diet"
+        android:id="@+id/tfid"
+        android:layout_marginTop="40dp"
+        />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Suggestion"
+        android:id="@+id/suggestion"
+        android:layout_marginTop="40dp"
+        android:layout_below="@+id/tfid"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="More Information"
+        android:id="@+id/more_information"
+        android:layout_marginTop="40dp"
+        android:layout_below="@+id/suggestion"/>
+
+</RelativeLayout>

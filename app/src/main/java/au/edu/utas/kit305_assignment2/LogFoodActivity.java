@@ -32,11 +32,11 @@ public class LogFoodActivity extends AppCompatActivity {
         final Button log = (Button) findViewById(R.id.logEntryButton);
         final Spinner foodGroup = (Spinner) findViewById(R.id.foodGroup);
         final Spinner foodType = (Spinner) findViewById(R.id.foodType);
-        final EditText amount = (EditText) findViewById(R.id.amount);
+        final EditText amount = (EditText) findViewById(R.id.quantity);
         final Spinner servingType = (Spinner) findViewById(R.id.servingsType);
         final Spinner time = (Spinner) findViewById(R.id.timePeriod);
-
         date = (EditText) findViewById(R.id.date);
+
         date.setText(dateFormatter.format(calendar.getTime()));
         date.setInputType(InputType.TYPE_NULL);
         final DatePickerDialog pickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {

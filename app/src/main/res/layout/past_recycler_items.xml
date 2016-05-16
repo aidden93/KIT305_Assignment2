@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+    <TextView
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/foodgr"
+        android:text="food Group"
+        android:lines="4"
+        android:layout_marginLeft="1dp"
+        />
+
+    <TextView
+        android:layout_width="70dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/foodtr"
+        android:layout_toRightOf="@+id/foodgr"
+        android:text="food type"
+        android:lines="4"
+        android:layout_marginLeft="1dp"
+        />
+    <TextView
+        android:layout_width="70dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/servingr"
+        android:layout_toRightOf="@+id/foodtr"
+        android:text="Serving"
+        android:lines="3"
+        android:layout_marginLeft="2dp"/>
+    <TextView
+        android:layout_width="70dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/dater"
+        android:layout_toRightOf="@+id/servingr"
+        android:text="date"
+        android:lines="2"
+        android:layout_marginLeft="2dp"/>
+    <TextView
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/timer"
+        android:layout_toRightOf="@+id/dater"
+        android:text="time"
+        android:layout_marginLeft="4dp"/>
+</RelativeLayout>
