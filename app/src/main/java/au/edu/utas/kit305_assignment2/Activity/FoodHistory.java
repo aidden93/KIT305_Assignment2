@@ -24,10 +24,10 @@ public class FoodHistory extends AppCompatActivity
         setContentView(R.layout.fragment_controller);
         fragmentManager = getSupportFragmentManager();
         fragmentTransaction = fragmentManager.beginTransaction();
-        Bundle bundle = new Bundle();
-        bundle.putInt("dateRange", 2);
+        if (savedInstanceState == null) savedInstanceState = new Bundle();
+        savedInstanceState.putInt("dateRange", 2);
         FoodHistroyFragment fragment = new FoodHistroyFragment();
-        fragment.setArguments(bundle);
+        fragment.setArguments(savedInstanceState);
         fragmentTransaction.replace(R.id.fragments, fragment, FoodHistroyFragment.class.getName());
         fragmentTransaction.commit();
     }

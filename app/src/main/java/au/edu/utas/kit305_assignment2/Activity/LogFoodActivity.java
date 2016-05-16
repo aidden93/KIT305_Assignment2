@@ -135,14 +135,22 @@ public class LogFoodActivity extends AppCompatActivity {
             @Override
             public void onClick(View v)
             {
-               databaseHelper = new DatabaseHelper(LogFoodActivity.this);
-               if(databaseHelper.insert(foodGroup.getSelectedItem().toString(), foodType.getSelectedItem().toString(), quantity.getText().toString() + " " + servingsType.getSelectedItem().toString()
-                       , date.getText().toString(), time)) {
-                   Toast.makeText(getApplicationContext(), "entry successful", Toast.LENGTH_SHORT).show();
-               } else {
-                   Toast.makeText(getApplicationContext(), "entry unsuccessful", Toast.LENGTH_SHORT).show();
-               }
-                finish();
+
+                if (foodGroup.getSelectedItem().equals("Choose Food Group")) {
+                    Toast.makeText(getApplicationContext(), "Please select a food group", Toast.LENGTH_SHORT).show();
+                } else if (quantity.getText().toString().length() == 0 || quantity.getText().equals("0")) {
+                    Toast.makeText(getApplicationContext(), "Please enter a quantity greater than 0", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    databaseHelper = new DatabaseHelper(LogFoodActivity.this);
+                    if (databaseHelper.insert(foodGroup.getSelectedItem().toString(), foodType.getSelectedItem().toString(), quantity.getText().toString() + " " + servingsType.getSelectedItem().toString()
+                            , date.getText().toString(), mealTime.getSelectedItem().toString())) {
+                        Toast.makeText(getApplicationContext(), "Entry successful", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Entry unsuccessful", Toast.LENGTH_SHORT).show();
+                    }
+                    finish();
+                }
             }
         });
     }

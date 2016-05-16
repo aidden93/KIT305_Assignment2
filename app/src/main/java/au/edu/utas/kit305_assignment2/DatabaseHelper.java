@@ -70,6 +70,11 @@ public class DatabaseHelper extends SQLiteOpenHelper
 
     }
 
+    public boolean removeEntry(int index) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.delete(TABLE_NAME, "food_id="+index, null) != -1;
+    }
+
     public List<PastData> getListFoods(int page, String startDate, String endDate) {
         int itemPerPage = 4;
         int offset = (page - 1) * itemPerPage;
