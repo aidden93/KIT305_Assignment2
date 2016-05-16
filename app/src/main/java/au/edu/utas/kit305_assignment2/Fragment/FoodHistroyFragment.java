@@ -11,9 +11,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -27,6 +25,7 @@ import au.edu.utas.kit305_assignment2.Activity.LogFoodActivity;
 import au.edu.utas.kit305_assignment2.Adapter.FoodHistoryRecyclerAdapter;
 import au.edu.utas.kit305_assignment2.DatabaseHelper;
 import au.edu.utas.kit305_assignment2.Listener.EndlessRecyclerOnScrollListener;
+import au.edu.utas.kit305_assignment2.Listener.RecyclerItemClickListener;
 import au.edu.utas.kit305_assignment2.R;
 
 /**
@@ -34,12 +33,14 @@ import au.edu.utas.kit305_assignment2.R;
  */
 public class FoodHistroyFragment extends Fragment
 {
-    private Button comparison, sevenDays, oneMonth;
+    private Button comparison, sevenDays, oneMonth, allTime;
     private RecyclerView recyclerView;
     private FoodHistoryRecyclerAdapter foodHistoryRecyclerAdapter;
     private FragmentManager fragmentManager;
     private FragmentTransaction fragmentTransaction;
     private DatabaseHelper db;
+    private Calendar cal;
+    private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     private int dateRange = 0;
     private int page = 1;
     @Nullable
@@ -49,17 +50,16 @@ public class FoodHistroyFragment extends Fragment
         final View view = inflater.inflate(R.layout.foodhistory_fragment, container, false);
         db = new DatabaseHelper(getActivity());
         dateRange = getArguments().getInt("dateRange");
-        Log.i("dateRange",dateRange+"");
         comparison =(Button) view.findViewById(R.id.comparison);
         recyclerView = (RecyclerView) view.findViewById(R.id.past_data);
         sevenDays = (Button) view.findViewById(R.id.seven_days);
         oneMonth = (Button) view.findViewById(R.id.one_month);
+        allTime = (Button) view.findViewById(R.id.all_time);
         final LinearLayoutManager layoutManager1 = new LinearLayoutManager(getActivity());
         layoutManager1.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager1);
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         //get current date time with Date()
-        Calendar cal = Calendar.getInstance();
+        cal =  Calendar.getInstance();
         final String startDate = dateFormat.format(cal.getTime());
         cal.add(Calendar.DATE, -dateRange);
         final String endDate = dateFormat.format(cal.getTime());
@@ -76,26 +76,15 @@ public class FoodHistroyFragment extends Fragment
 
             }
         });
-
-        recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
-            @Override
-            public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
-                Intent intent = new Intent(view.getContext(), LogFoodActivity.class);
-                Bundle bundle = new Bundle();
-                View childView = rv.findChildViewUnder(e.getX(), e.getY());
-                Log.i("on", "hi");
-                Toast.makeText(view.getContext(), "row: "+childView.getId(), Toast.LENGTH_SHORT).show();
-                bundle.putInt("row", (childView.getId()));
-                //startActivity(intent);
-                return true;
-            }
-
-            @Override
-            public void onTouchEvent(RecyclerView rv, MotionEvent e) {}
-
-            @Override
-            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {}
-        });
+        recyclerView.addOnItemTouchListener(
+                new RecyclerItemClickListener(view.getContext(), new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override public void onItemClick(View view, int position) {
+                        Intent intent = new Intent(view.getContext(), LogFoodActivity.class);
+                        intent.putExtra("row", position);
+                        startActivity(intent);
+                    }
+                })
+        );
 
         final ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
 
@@ -114,7 +103,7 @@ public class FoodHistroyFragment extends Fragment
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 
                             public void onClick(DialogInterface dialog, int whichButton) {
-                                if (db.removeEntry(viewHolder.getAdapterPosition()))
+                                if (db.removeEntry(viewHolder.getAdapterPosition()+1))
                                     Toast.makeText(view.getContext(), "Entry removed.", Toast.LENGTH_SHORT).show();
                                 else {
                                     updateList(page, startDate, endDate);
@@ -167,7 +156,26 @@ public class FoodHistroyFragment extends Fragment
                 fragmentTransaction.commit();
             }
         });
+        allTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fragmentManager = getActivity().getSupportFragmentManager();
+                fragmentTransaction = fragmentManager.beginTransaction();
+                Bundle bundle = new Bundle();
+                bundle.putInt("dateRange", Integer.MAX_VALUE);
+                FoodHistroyFragment fragment = new FoodHistroyFragment();
+                fragment.setArguments(bundle);
+                fragmentTransaction.replace(R.id.fragments, fragment, FoodHistroyFragment.class.getName());
+                fragmentTransaction.commit();
+            }
+        });
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateList(page, dateFormat.format(cal.getTime()), dateFormat.format(cal.getTime()));
     }
 
     private void viewComparison()

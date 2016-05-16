@@ -15,10 +15,10 @@ import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 
 import au.edu.utas.kit305_assignment2.DatabaseHelper;
+import au.edu.utas.kit305_assignment2.Pojo.PastData;
 import au.edu.utas.kit305_assignment2.R;
 
 public class LogFoodActivity extends AppCompatActivity {
@@ -46,11 +46,44 @@ public class LogFoodActivity extends AppCompatActivity {
         dateFormatter = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         setContentView(R.layout.activity_log_food);
         init();
+        if (getIntent().getExtras() != null) {
+            int row = getIntent().getExtras().getInt("row");
+            DatabaseHelper db = new DatabaseHelper(this);
+            PastData entry = db.getEntry(row+1);
+            if (entry != null) {
+                for (int i = 0; i < foodGroup.getCount(); i++) {
+                    if (foodGroup.getAdapter().getItem(i).toString().equals(entry.getFoodGroup())) {
+                        foodGroup.setSelection(i);
+                        break;
+                    }
+                }
+                for (int i = 0; i < foodType.getCount(); i++) {
+                    if (foodType.getAdapter().getItem(i).equals(entry.getFoodType())) {
+                        foodType.setSelection(i);
+                        break;
+                    }
+                }
+                String[] serve = entry.getServing().split("\\s+");
+                for (int i = 0; i < servingsType.getCount(); i++) {
+                    if (servingsType.getAdapter().getItem(i).equals(serve[1])) {
+                        servingsType.setSelection(i);
+                        break;
+                    }
+                }
+                quantity.setText(serve[0]);
+                for (int i = 0; i < mealTime.getCount(); i++) {
+                    if (mealTime.getAdapter().getItem(i).equals(entry.getMealTime())) {
+                        mealTime.setSelection(i);
+                        break;
+                    }
+                }
+                date.setText(entry.getDate());
+            }
+        }
     }
 
     private void init()
     {
-        final String time = new SimpleDateFormat("hh:mm").format(new Date());
         quantity = (EditText) findViewById(R.id.quantity);
         foodGroup = (Spinner) findViewById(R.id.foodGroup);
         foodType = (Spinner) findViewById(R.id.foodType);
@@ -135,7 +168,6 @@ public class LogFoodActivity extends AppCompatActivity {
             @Override
             public void onClick(View v)
             {
-
                 if (foodGroup.getSelectedItem().equals("Choose Food Group")) {
                     Toast.makeText(getApplicationContext(), "Please select a food group", Toast.LENGTH_SHORT).show();
                 } else if (quantity.getText().toString().length() == 0 || quantity.getText().equals("0")) {
@@ -143,7 +175,21 @@ public class LogFoodActivity extends AppCompatActivity {
                 }
                 else {
                     databaseHelper = new DatabaseHelper(LogFoodActivity.this);
-                    if (databaseHelper.insert(foodGroup.getSelectedItem().toString(), foodType.getSelectedItem().toString(), quantity.getText().toString() + " " + servingsType.getSelectedItem().toString()
+                    if (getIntent().getExtras() != null) {
+                        PastData food = new PastData();
+                        food.setFoodGroup(foodGroup.getSelectedItem().toString());
+                        food.setFoodType(foodType.getSelectedItem().toString());
+                        food.setQuantity(quantity.getText().toString());
+                        food.setServing(quantity.getText().toString()+" "+servingsType.getSelectedItem().toString());
+                        food.setDate(date.getText().toString());
+                        food.setMealTime(mealTime.getSelectedItem().toString());
+                        food.setId((getIntent().getExtras().getInt("row")+1));
+                       if (databaseHelper.updateEntry(food.getId(), food))
+                           Toast.makeText(getApplicationContext(), "Update successful", Toast.LENGTH_SHORT).show();
+                        else
+                           Toast.makeText(getApplicationContext(), "Update unsuccessful", Toast.LENGTH_SHORT).show();
+                    }
+                    else if (databaseHelper.insert(foodGroup.getSelectedItem().toString(), foodType.getSelectedItem().toString(), quantity.getText().toString()+" "+servingsType.getSelectedItem().toString(), servingsType.getSelectedItem().toString()
                             , date.getText().toString(), mealTime.getSelectedItem().toString())) {
                         Toast.makeText(getApplicationContext(), "Entry successful", Toast.LENGTH_SHORT).show();
                     } else {

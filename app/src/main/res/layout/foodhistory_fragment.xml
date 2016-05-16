@@ -50,7 +50,7 @@
         android:layout_below="@+id/foodg"
         android:layout_margin="5dp"/>
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="My Meals Vs Australian Dietary GuideLines"
         android:id="@+id/comparison"
@@ -80,5 +80,11 @@
         android:id="@+id/one_month"
         android:layout_below="@+id/seven_days"
        />
-
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="All time"
+        android:id="@+id/all_time"
+        android:layout_below="@+id/one_month"
+        />
 </RelativeLayout>

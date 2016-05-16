@@ -5,7 +5,16 @@ package au.edu.utas.kit305_assignment2.Pojo;
  */
 public class PastData
 {
-    private String foodGroup, foodType, Serving, Date, Time;
+    private int id;
+    private String foodGroup, foodType, serving, date, mealTime, quantity ;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getFoodGroup()
     {
@@ -15,16 +24,6 @@ public class PastData
     public void setFoodGroup(String foodGroup)
     {
         this.foodGroup = foodGroup;
-    }
-
-    public String getServing()
-    {
-        return Serving;
-    }
-
-    public void setServing(String serving)
-    {
-        Serving = serving;
     }
 
     public String getFoodType()
@@ -37,23 +36,44 @@ public class PastData
         this.foodType = foodType;
     }
 
+    public String getServing()
+    {
+        return serving;
+    }
+
+    public void setServing(String serving)
+    {
+        this.serving = serving;
+    }
+
     public String getDate()
     {
-        return Date;
+        return date;
     }
 
     public void setDate(String date)
     {
-        Date = date;
+        this.date = date;
     }
 
-    public String getTime()
+    public String getMealTime()
     {
-        return Time;
+        return mealTime;
     }
 
-    public void setTime(String time)
+    public void setMealTime(String mealTime)
     {
-        Time = time;
+        this.mealTime = mealTime;
     }
+
+    public String getQuantity()
+    {
+        return quantity;
+    }
+
+    public void setQuantity(String quantity)
+    {
+        this.quantity = quantity;
+    }
+
 }

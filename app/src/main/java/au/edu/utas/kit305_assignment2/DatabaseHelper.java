@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +24,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
     public static final String QUANTITY = "quantity";
     public static final String DATE = "date";
     public static final String TIME = "time";
+    public static final String SERVINGS = "servings";
 
     public DatabaseHelper(Context context)
     {
@@ -39,6 +39,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
             + FOOD_GROUP + " TEXT,"
             + FOOD_TYPE + " TEXT,"
             + QUANTITY + " TEXT,"
+            + SERVINGS + " TEXT,"
             + DATE + " TEXT,"
             + TIME + " TEXT" + ")");
     }
@@ -50,7 +51,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
         onCreate(db);
     }
 
-    public boolean insert(String food_group, String food_type, String quantity, String date,
+    public boolean insert(String food_group, String food_type, String quantity, String servings, String date,
                           String time)
     {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -59,6 +60,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
         contentValues.put(FOOD_GROUP, food_group);
         contentValues.put(FOOD_TYPE, food_type);
         contentValues.put(QUANTITY, quantity);
+        contentValues.put(SERVINGS, servings);
         contentValues.put(DATE, date);
         contentValues.put(TIME, time);
 
@@ -70,9 +72,57 @@ public class DatabaseHelper extends SQLiteOpenHelper
 
     }
 
+    public boolean updateEntry(int index, PastData pastData) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("food_id", pastData.getId());
+        contentValues.put(FOOD_GROUP, pastData.getFoodGroup());
+        contentValues.put(FOOD_TYPE, pastData.getFoodType());
+        contentValues.put(QUANTITY, pastData.getServing());
+        contentValues.put(DATE, pastData.getDate());
+        contentValues.put(TIME, pastData.getMealTime());
+        return db.update(TABLE_NAME, contentValues, "food_id="+index, null) > 0;
+    }
+
     public boolean removeEntry(int index) {
         SQLiteDatabase db = this.getWritableDatabase();
-        return db.delete(TABLE_NAME, "food_id="+index, null) != -1;
+        boolean success = db.delete(TABLE_NAME, "food_id="+index, null) != -1;
+        String query = ("SELECT * FROM " + TABLE_NAME );
+        Cursor cursor = db.rawQuery(query, null);
+
+        for(int i=0; i<cursor.getCount(); i++)
+        {
+            cursor.moveToNext();
+            PastData food = new PastData();
+            food.setFoodGroup(cursor.getString(cursor.getColumnIndex(FOOD_GROUP)));
+            food.setFoodType(cursor.getString(cursor.getColumnIndex(FOOD_TYPE)));
+            food.setServing(cursor.getString(cursor.getColumnIndex(QUANTITY)));
+            food.setDate(cursor.getString(cursor.getColumnIndex(DATE)));
+            food.setMealTime(cursor.getString(cursor.getColumnIndex(TIME)));
+            food.setId(i+1);
+            updateEntry(index, food);
+        }
+        db.execSQL("VACUUM;");
+        return success;
+    }
+
+    public PastData getEntry(int index) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String selectQuery = "SELECT  * FROM " + TABLE_NAME + " WHERE food_id=" + index;
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor != null && cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            PastData food = new PastData();
+            food.setFoodGroup(cursor.getString(cursor.getColumnIndex(FOOD_GROUP)));
+            food.setFoodType(cursor.getString(cursor.getColumnIndex(FOOD_TYPE)));
+            food.setServing(cursor.getString(cursor.getColumnIndex(QUANTITY)));
+            food.setDate(cursor.getString(cursor.getColumnIndex(DATE)));
+            food.setMealTime(cursor.getString(cursor.getColumnIndex(TIME)));
+            food.setId(cursor.getInt(cursor.getColumnIndex("food_id")));
+            return food;
+        }
+        return null;
     }
 
     public List<PastData> getListFoods(int page, String startDate, String endDate) {
@@ -80,8 +130,6 @@ public class DatabaseHelper extends SQLiteOpenHelper
         int offset = (page - 1) * itemPerPage;
         int i = 0;
         String query = ("SELECT * FROM " + TABLE_NAME + " WHERE date BETWEEN ? AND ? "+" LIMIT " + offset + "," + itemPerPage );
-        Log.i("startDate", startDate);
-        Log.i("endDate", endDate);
         SQLiteDatabase db = getWritableDatabase();
         Cursor cursor = db.rawQuery(query, new String[]{endDate, startDate});
 
@@ -92,7 +140,8 @@ public class DatabaseHelper extends SQLiteOpenHelper
             food.setFoodType(cursor.getString(cursor.getColumnIndex(FOOD_TYPE)));
             food.setServing(cursor.getString(cursor.getColumnIndex(QUANTITY)));
             food.setDate(cursor.getString(cursor.getColumnIndex(DATE)));
-            food.setTime(cursor.getString(cursor.getColumnIndex(TIME)));
+            food.setMealTime(cursor.getString(cursor.getColumnIndex(TIME)));
+            food.setId(cursor.getInt(cursor.getColumnIndex("food_id")));
             listFoods.add(food);
 
         }
