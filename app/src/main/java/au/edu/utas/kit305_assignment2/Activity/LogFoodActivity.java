@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -21,7 +22,8 @@ import au.edu.utas.kit305_assignment2.DatabaseHelper;
 import au.edu.utas.kit305_assignment2.Pojo.PastData;
 import au.edu.utas.kit305_assignment2.R;
 
-public class LogFoodActivity extends AppCompatActivity {
+public class LogFoodActivity extends AppCompatActivity
+{
 
     private EditText date;
     private SimpleDateFormat dateFormatter;
@@ -39,7 +41,7 @@ public class LogFoodActivity extends AppCompatActivity {
     private String[] milkTypes = {"Milks","Yoghurt", "Cheese"};
     private String[] servingType = {"Servings", "Grams", "Millilitres"};
     private String[] mealTimes = {"Breakfast", "Morning snack", "Lunch", "Afternoon snack", "Dinner", "Evening snack"};
-   private DatabaseHelper databaseHelper;
+    private DatabaseHelper databaseHelper;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -184,16 +186,21 @@ public class LogFoodActivity extends AppCompatActivity {
                         food.setDate(date.getText().toString());
                         food.setMealTime(mealTime.getSelectedItem().toString());
                         food.setId((getIntent().getExtras().getInt("row")));
-                       if (databaseHelper.updateEntry(food.getId(), food))
+                       if (databaseHelper.updateEntry(food.getId(), food)) {
+                           Log.i("update", "hi");
                            Toast.makeText(getApplicationContext(), "Update successful", Toast.LENGTH_SHORT).show();
+                       }
                         else
                            Toast.makeText(getApplicationContext(), "Update unsuccessful", Toast.LENGTH_SHORT).show();
                     }
-                    else if (databaseHelper.insert(foodGroup.getSelectedItem().toString(), foodType.getSelectedItem().toString(), quantity.getText().toString()+" "+servingsType.getSelectedItem().toString(), servingsType.getSelectedItem().toString()
+                    else{
+                        DatabaseHelper db = new DatabaseHelper(LogFoodActivity.this);
+                        if (db.insert(foodGroup.getSelectedItem().toString(), foodType.getSelectedItem().toString(), quantity.getText().toString()+" "+servingsType.getSelectedItem().toString(), servingsType.getSelectedItem().toString()
                             , date.getText().toString(), mealTime.getSelectedItem().toString())) {
-                        Toast.makeText(getApplicationContext(), "Entry successful", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(getApplicationContext(), "Entry unsuccessful", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "Entry successful", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Entry unsuccessful", Toast.LENGTH_SHORT).show();
+                        }
                     }
                     finish();
                 }

@@ -46,7 +46,7 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/past_data"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="200dp"
         android:layout_below="@+id/foodg"
         android:layout_margin="5dp"/>
     <Button
@@ -55,8 +55,7 @@
         android:text="My Meals Vs Australian Dietary GuideLines"
         android:id="@+id/comparison"
         android:layout_centerVertical="true"
-        android:layout_alignLeft="@+id/past_data"
-        android:layout_alignStart="@+id/past_data" />
+        android:layout_below="@+id/past_data"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -2,6 +2,7 @@ package au.edu.utas.kit305_assignment2.Adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,9 +16,9 @@ import au.edu.utas.kit305_assignment2.R;
 /**
  * Created by adarshan on 5/13/16.
  */
-public class FoodHistoryRecyclerAdapter  extends RecyclerView.Adapter<FoodHistoryRecyclerAdapter.ListHolderView>
+public class FoodHistoryRecyclerAdapter extends RecyclerView.Adapter<FoodHistoryRecyclerAdapter.ListHolderView>
 {
-    private List<PastData> list;
+    public List<PastData> list;
     private Context context;
 
     public FoodHistoryRecyclerAdapter(Context context, List<PastData> list)
@@ -25,6 +26,7 @@ public class FoodHistoryRecyclerAdapter  extends RecyclerView.Adapter<FoodHistor
     {
         this.context = context;
         this.list = list;
+        Log.i("size",list.size()+"");
     }
 
 

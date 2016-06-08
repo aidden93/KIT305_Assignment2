@@ -2,6 +2,7 @@ package au.edu.utas.kit305_assignment2.Fragment;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -19,13 +20,16 @@ import android.widget.Toast;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import au.edu.utas.kit305_assignment2.Activity.LogFoodActivity;
 import au.edu.utas.kit305_assignment2.Adapter.FoodHistoryRecyclerAdapter;
 import au.edu.utas.kit305_assignment2.DatabaseHelper;
 import au.edu.utas.kit305_assignment2.Listener.EndlessRecyclerOnScrollListener;
 import au.edu.utas.kit305_assignment2.Listener.RecyclerItemClickListener;
+import au.edu.utas.kit305_assignment2.Pojo.PastData;
 import au.edu.utas.kit305_assignment2.R;
 
 /**
@@ -65,14 +69,12 @@ public class FoodHistroyFragment extends Fragment
         final String endDate = dateFormat.format(cal.getTime());
 
 
-        updateList(page, startDate,endDate);
         recyclerView.addOnScrollListener(new EndlessRecyclerOnScrollListener(layoutManager1) {
             @Override
             public void onLoadMore(int current_page) {
-                if (page > 0) page = current_page;
                 int lastFirstVisiblePosition = ((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
                 recyclerView.getLayoutManager().scrollToPosition(lastFirstVisiblePosition);
-                updateList(current_page, startDate, endDate);
+                updateList(current_page,startDate,endDate);
 
             }
         });
@@ -103,17 +105,17 @@ public class FoodHistroyFragment extends Fragment
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 
                             public void onClick(DialogInterface dialog, int whichButton) {
-                                if (db.removeEntry(viewHolder.getAdapterPosition()+1))
-                                    Toast.makeText(view.getContext(), "Entry removed.", Toast.LENGTH_SHORT).show();
-                                else {
-                                    updateList(page, startDate, endDate);
-                                    Toast.makeText(view.getContext(), "Failed to remove the entry.", Toast.LENGTH_SHORT).show();
-                                }
+                                DatabaseHelper db = new DatabaseHelper(getActivity());
+                                SQLiteDatabase del = db.getWritableDatabase();
+                                del.delete("mymeal", "food_id=?", new String[]{String.valueOf(foodHistoryRecyclerAdapter.getListItems().get(viewHolder.getAdapterPosition()).getId())});
+                                foodHistoryRecyclerAdapter.list.remove(viewHolder.getAdapterPosition());
+                                foodHistoryRecyclerAdapter.notifyItemRemoved(viewHolder.getAdapterPosition());
+                                foodHistoryRecyclerAdapter.notifyItemRangeChanged(viewHolder.getAdapterPosition(),foodHistoryRecyclerAdapter.list.size());
                             }})
                         .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
 
                             public void onClick(DialogInterface dialog, int whichButton) {
-                                updateList(page, startDate, endDate);
+                                updateList(page,startDate,endDate);
                                 recyclerView.invalidate();
                                 Toast.makeText(view.getContext(), "Entry readded.", Toast.LENGTH_SHORT).show();
                             }}).show();
@@ -162,30 +164,27 @@ public class FoodHistroyFragment extends Fragment
                 fragmentManager = getActivity().getSupportFragmentManager();
                 fragmentTransaction = fragmentManager.beginTransaction();
                 Bundle bundle = new Bundle();
-                bundle.putInt("dateRange", Integer.MAX_VALUE);
+                bundle.putInt("dateRange", 100);
                 FoodHistroyFragment fragment = new FoodHistroyFragment();
                 fragment.setArguments(bundle);
                 fragmentTransaction.replace(R.id.fragments, fragment, FoodHistroyFragment.class.getName());
                 fragmentTransaction.commit();
             }
         });
+        updateList(page,startDate,endDate);
         return view;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        updateList(page, dateFormat.format(cal.getTime()), dateFormat.format(cal.getTime()));
-    }
 
     private void viewComparison()
     {
 
     }
 
-    private void updateList(int page, String startDate, String endDate)
+    private void updateList(int page,String startDate,String endDate)
     {
         foodHistoryRecyclerAdapter = new FoodHistoryRecyclerAdapter(getActivity(), db.getListFoods(page,startDate,endDate));
         recyclerView.setAdapter(foodHistoryRecyclerAdapter);
     }
+
 }
